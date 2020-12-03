@@ -18,5 +18,5 @@ def validate_request_json():
     return decorator
 
 
-from . import revendedor, compra
+from . import routes, errors
 

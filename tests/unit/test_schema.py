@@ -6,10 +6,10 @@ class RevendedorSchemaTest(unittest.TestCase):
 
     def test_validate__representante_valido__nenhum_erro(self):
         revendedor = RevendedorSchema().load(
-            {"cpf": "87535514600", "nome": "Um Nome Qualquer", "senha": "senha!234", "email": "teste@teste.com"}
+            {"cpf": "87535514600", "nome": "Um Nome Qualquer", "senha": "senha!234aaaaaa", "email": "teste@teste.com"}
         )
 
-        self.assertEqual('87535514600', revendedor.cpf_revendedor)
+        self.assertEqual('87535514600', revendedor.cpf)
         self.assertEqual('Um Nome Qualquer', revendedor.nome)
         self.assertEqual('senha!234', revendedor.senha)
         self.assertEqual('teste@teste.com', revendedor.email)

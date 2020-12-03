@@ -1,13 +1,12 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import requests
 from src import mongo
+from src.api.errors import ApiValidationError
+from src.config import URL_CASHBACK_ACUMULADO, TOKEN_API_CASHBACK
 from src.model import Revendedor, Compra, CompraCashBack
 from src.schema import RevendedorSchema, CompraSchema
-
-# TODO: MIGRAR PARA CONFIG
-URL_CASHBACK_ACUMULADO = 'https://mdaqk8ek5j.execute-api.us-east-1.amazonaws.com/v1/cashback'
 
 
 class RevendedorService:
@@ -54,7 +53,7 @@ class CompraService:
     def _validar_revendedor(self, cpf: str):
         _revendedor = self._revendedor_service.obter(cpf)
         if not _revendedor:
-            raise Exception('O revendedor informado não foi encontrado.')
+            raise ApiValidationError('O revendedor informado não foi encontrado.')
         return _revendedor
 
     def salvar(self, compra: Compra):
@@ -62,7 +61,7 @@ class CompraService:
 
         _compra = self._compra_collection.find_one({'codigo': compra.codigo})
         if _compra:
-            raise Exception('Compra já cadastrada.')
+            raise ApiValidationError('Compra já cadastrada.')
 
         _revendedor_pre_aprovado = self._revendedor_pre_aprovado_collection.find_one({'cpf': compra.cpf_revendedor})
         if _revendedor_pre_aprovado:
@@ -142,14 +141,11 @@ class CompraService:
         self._validar_revendedor(cpf_revendedor)
 
         url = f'{URL_CASHBACK_ACUMULADO}?cpf={cpf_revendedor}'
-        response = requests.get(url, headers={'token': 'ZXPURQOARHiMc6Y0flhRC1LVlZQVFRnm'})
+        response = requests.get(url, headers={'token': TOKEN_API_CASHBACK})
 
         if response.ok:
             _response = response.json()
             _body = _response['body']
             return {'cpf': cpf_revendedor, 'saldo': _body['credit']}
 
-        raise Exception('Internal Server Error.')
-
-
-
+        raise Exception('Erro ao obter cashback acumulado')

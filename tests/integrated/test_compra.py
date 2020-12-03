@@ -21,7 +21,7 @@ class TestCompra(unittest.TestCase):
     def test_listar__compras_com_cashback__expected_compras_com_cashback(self):
         # FIXTURES
         cpf = '67976752006'
-        revendedor = {'cpf': cpf, 'nome': 'João Silva', 'senha': 'b'*10, 'email': 'teste@teste.com'}
+        revendedor = {'cpf': cpf, 'nome': 'João Silva', 'senha': 'b' * 10, 'email': 'teste@teste.com'}
         self.revendedor_collection.insert_one(revendedor)
 
         self.compra_collection.insert_many([
@@ -62,7 +62,7 @@ class TestCompra(unittest.TestCase):
     def test_adcionar_compra__compra_valida__expected_salvar_compra(self):
         # FIXTURES
         cpf = '86342733775'
-        revendedor = {'cpf': cpf, 'nome': 'João Silva', 'senha': 'a'*10, 'email': 'teste@teste.com'}
+        revendedor = {'cpf': cpf, 'nome': 'João Silva', 'senha': 'a' * 10, 'email': 'teste@teste.com'}
         self.revendedor_collection.insert_one(revendedor)
 
         compra = {
@@ -75,12 +75,12 @@ class TestCompra(unittest.TestCase):
         # ASSERTS
         self.assertEqual(201, result.status_code)
         self.assertEqual({
-                            'codigo': '21',
-                            'cpf_revendedor': '86342733775',
-                            'data': '2020-01-10T00:00:00',
-                            'status': 'Em Validação',
-                            'valor': 100.0
-                        }, result.json
+            'codigo': '21',
+            'cpf_revendedor': '86342733775',
+            'data': '2020-01-10T00:00:00',
+            'status': 'Em Validação',
+            'valor': 100.0
+        }, result.json
         )
 
         _compra = self.compra_collection.find_one({'codigo': compra['codigo']})
@@ -88,6 +88,19 @@ class TestCompra(unittest.TestCase):
         self.assertEqual(compra['cpf_revendedor'], _compra['cpf_revendedor'])
         self.assertEqual(compra['data'], _compra['data'])
         self.assertEqual('Em Validação', _compra['status'])
+
+    def test_adcionar_compra__cpf_rota_diferente_payload__expected_error(self):
+        # FIXTURES
+        cpf = '86342733775'
+        compra = {
+            'codigo': '21', 'valor': 100, 'cpf_revendedor': cpf, 'data': datetime.datetime(2020, 1, 10).isoformat()
+        }
+
+        # EXERCISE
+        result = self.app.post(f'api/v1/revendedor/1234/compra', data=json.dumps(compra), headers=self._HEADERS)
+
+        # ASSERTS
+        self.assertEqual(400, result.status_code)
 
     def test_obter_saldo_cashback__cashback_acumulado__expected_saldo_cashback(self):
         # FIXTURES
