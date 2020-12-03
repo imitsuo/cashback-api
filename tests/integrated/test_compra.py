@@ -30,7 +30,7 @@ class TestCompra(unittest.TestCase):
         ])
 
         # EXERCISE
-        response = self.app.get('/revendedor/67976752006/compras?offset=0')
+        response = self.app.get('api/v1/revendedor/67976752006/compras?offset=0')
 
         # ASSERTS
         self.assertEqual(200, response.status_code)
@@ -70,7 +70,7 @@ class TestCompra(unittest.TestCase):
         }
 
         # EXERCISE
-        result = self.app.post(f'/revendedor/{cpf}/compra', data=json.dumps(compra), headers=self._HEADERS)
+        result = self.app.post(f'api/v1/revendedor/{cpf}/compra', data=json.dumps(compra), headers=self._HEADERS)
 
         # ASSERTS
         self.assertEqual(201, result.status_code)
@@ -96,7 +96,7 @@ class TestCompra(unittest.TestCase):
         self.revendedor_collection.insert_one(revendedor)
 
         # EXERCISE
-        result = self.app.get(f'/revendedor/{cpf}/cashback')
+        result = self.app.get(f'api/v1/revendedor/{cpf}/cashback')
 
         # ASSERT
         self.assertEqual(200, result.status_code)

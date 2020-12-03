@@ -36,9 +36,8 @@ class RevendedorService:
 
         if revendedor and revendedor.get('senha') == senha:
             token = self._token_collection.find_one({'cpf': cpf})
-            # expirar token
             if not token:
-                token = {'cpf': cpf, 'token': uuid.uuid4()}
+                token = {'cpf': cpf, 'token': uuid.uuid4(), 'created_at': datetime.now()}
                 self._token_collection.insert_one(token)
             return True, token['token']
 
@@ -48,7 +47,6 @@ class RevendedorService:
 class CompraService:
 
     def __init__(self):
-        # self._revendedor_collection = mongo.db.get_collection('revendedor')
         self._revendedor_pre_aprovado_collection = mongo.db.get_collection('revendedor-pre-aprovado')
         self._compra_collection = mongo.db.get_collection('compra')
         self._revendedor_service = RevendedorService()

@@ -10,7 +10,7 @@ def validate_request_json():
         @wraps(fn)
         def wrapper(*args, **kwargs):
             if not request.is_json:
-                return Response('', 400)
+                return Response('Content-type should be application/json', 400)
             return fn(*args, **kwargs)
 
         return wrapper
@@ -19,3 +19,4 @@ def validate_request_json():
 
 
 from . import revendedor, compra
+

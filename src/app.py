@@ -1,4 +1,3 @@
-# from . import create_app
 from src import create_app, mongo
 
 
@@ -9,7 +8,7 @@ if __name__ == '__main__':
     # def hello_world():
     #     return "Hello, World!"
 
-    result = mongo.db.revendedor.find_one()
+    # result = mongo.db.revendedor.find_one()
 
     # from src.api import *
 

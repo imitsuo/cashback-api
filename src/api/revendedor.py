@@ -5,10 +5,11 @@ from flask import request, Response
 from src.schema import RevendedorSchema
 from src.domain.service import RevendedorService, CompraService
 
-from . import api_bp
+from . import api_bp, validate_request_json
 
 
 @api_bp.route('/revendedor/', methods=['POST'])
+@validate_request_json()
 def create():
     payload = request.json
     errors = RevendedorSchema().validate(payload)
@@ -18,7 +19,7 @@ def create():
 
     revendedor = RevendedorSchema().load(payload)
 
-    result = RevendedorService().obter(revendedor.cpf_revendedor)
+    result = RevendedorService().obter(revendedor.cpf)
     if not result:
         RevendedorService().salvar(revendedor)
         return Response(json.dumps(payload), status=201, mimetype='application/json')
@@ -27,6 +28,7 @@ def create():
 
 
 @api_bp.route('/revendedor/login', methods=['POST'])
+@validate_request_json()
 def login():
     payload = request.json
     # TODO VALIDAR

@@ -7,7 +7,7 @@ from ..schema import CompraSchema, CompraCashBackSchema
 
 #TODO: Criar handler para validar se resquest é json e capturar erros e formatar response
 
-# TODO REVISAR ROTA cpf da rota x cpf do payload
+
 @api_bp.route('/revendedor/<string:cpf>/compra', methods=['POST'])
 @validate_request_json()
 def adcionar_compra(cpf: str):
@@ -16,6 +16,9 @@ def adcionar_compra(cpf: str):
     errors = CompraSchema().validate(payload)
     if errors:
         return Response(json.dumps(errors), status=400, mimetype='application/json')
+
+    if cpf != payload['cpf_revendedor']:
+        raise Exception('Cpf informado na rota diferente do payload')
 
     _compra = CompraSchema().load(payload)
     _compra = CompraService().salvar(_compra)
