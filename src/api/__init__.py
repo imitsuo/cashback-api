@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import Blueprint, request, Response
 
-api_bp = Blueprint('apis', __name__)
+api_bp = Blueprint('api', __name__)
 
 
 def validate_request_json():

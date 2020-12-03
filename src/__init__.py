@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_pymongo import PyMongo
 from src.config import MONGO_URI
-# mongo_uri = 'mongodb://mongoadmin:secret@localhost:27017/cashback-api?authSource=admin&authMechanism=SCRAM-SHA-1'
+
 mongo = PyMongo()
 
 

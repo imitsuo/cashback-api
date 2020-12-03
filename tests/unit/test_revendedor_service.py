@@ -1,5 +1,4 @@
 import unittest
-from functools import wraps
 from unittest.mock import patch, Mock
 
 from src.domain.service import RevendedorService
