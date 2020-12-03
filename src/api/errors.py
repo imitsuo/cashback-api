@@ -30,3 +30,9 @@ def error_handler(error):
     response.status_code = error.status_code
     return response
 
+
+@api_bp.errorhandler(Exception)
+def error_handler(error):
+    response = jsonify({'message': 'something went wrong'})
+    response.status_code = 500
+    return response
